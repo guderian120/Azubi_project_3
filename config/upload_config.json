@@ -1,0 +1,33 @@
+{
+  "bucket_name": "${S3_BUCKET_NAME}",
+  "kms_key_id": "${KMS_KEY_ID}",
+  "region": "${AWS_REGION}",
+  "multipart_threshold": 104857600,
+  "multipart_chunksize": 8388608,
+  "max_file_size": 5368709120,
+  "max_concurrent_uploads": 10,
+  "retry_attempts": 3,
+  "allowed_extensions": [
+    ".zip",
+    ".tar",
+    ".gz",
+    ".pdf",
+    ".doc",
+    ".docx",
+    ".xls",
+    ".xlsx",
+    ".ppt",
+    ".pptx",
+    ".txt",
+    ".csv",
+    ".json",
+    ".xml",
+    ".yml",
+    ".yaml",
+    ".log",
+    ".bak"
+  ],
+  "upload_prefix": "uploads",
+  "environment": "dev",
+  "project": "secure-upload-system"
+}
