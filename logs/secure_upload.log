@@ -1,0 +1,73 @@
+2025-09-18 00:31:31,841 - __main__ - ERROR - Unexpected error: UploadConfig.__init__() got an unexpected keyword argument 'upload_prefix'
+2025-09-18 00:31:44,302 - __main__ - ERROR - Unexpected error: UploadConfig.__init__() got an unexpected keyword argument 'upload_prefix'
+2025-09-18 00:31:56,712 - __main__ - ERROR - Unexpected error: UploadConfig.__init__() got an unexpected keyword argument 'upload_prefix'
+2025-09-18 00:32:27,573 - scripts.secure_upload - ERROR - Failed to setup AWS session: Got unexpected keyword argument 'use_ssl'
+2025-09-18 00:32:27,575 - scripts.secure_upload - ERROR - Failed to setup AWS session: Got unexpected keyword argument 'use_ssl'
+2025-09-18 00:32:27,576 - scripts.secure_upload - ERROR - Failed to setup AWS session: Got unexpected keyword argument 'use_ssl'
+2025-09-18 00:32:27,577 - scripts.secure_upload - ERROR - Failed to setup AWS session: Got unexpected keyword argument 'use_ssl'
+2025-09-18 00:32:27,577 - scripts.secure_upload - ERROR - Failed to setup AWS session: Got unexpected keyword argument 'use_ssl'
+2025-09-18 00:32:27,579 - scripts.secure_upload - ERROR - Failed to setup AWS session: Got unexpected keyword argument 'use_ssl'
+2025-09-18 00:32:27,580 - scripts.secure_upload - ERROR - Failed to setup AWS session: Got unexpected keyword argument 'use_ssl'
+2025-09-18 00:32:27,580 - scripts.secure_upload - ERROR - Failed to setup AWS session: Got unexpected keyword argument 'use_ssl'
+2025-09-18 00:32:27,582 - monitoring.s3_monitor - INFO - Monitoring configuration loaded
+2025-09-18 00:32:27,584 - monitoring.s3_monitor - INFO - Monitoring configuration loaded
+2025-09-18 00:32:27,585 - monitoring.s3_monitor - INFO - Monitoring configuration loaded
+2025-09-18 00:32:27,586 - monitoring.s3_monitor - WARNING - Incomplete log line: incomplete log line...
+2025-09-18 00:32:27,587 - monitoring.s3_monitor - INFO - Monitoring configuration loaded
+2025-09-18 00:32:27,587 - monitoring.s3_monitor - WARNING - Incomplete log line: bucket-owner bucket [06/Feb/2023:00:00:00 +0000] 192.168.1.1 user-id 3E57427F3EXAMPLE REST.GET.OBJEC...
+2025-09-18 00:32:27,588 - monitoring.s3_monitor - INFO - Monitoring configuration loaded
+2025-09-18 00:32:27,614 - scripts.secure_upload - ERROR - Failed to setup AWS session: Got unexpected keyword argument 'use_ssl'
+2025-09-18 00:32:27,623 - scripts.secure_upload - ERROR - Failed to setup AWS session: Got unexpected keyword argument 'use_ssl'
+2025-09-18 00:32:27,625 - scripts.secure_upload - ERROR - Failed to setup AWS session: Got unexpected keyword argument 'use_ssl'
+2025-09-18 00:44:20,843 - __main__ - ERROR - Unexpected error: UploadConfig.__init__() got an unexpected keyword argument 'upload_prefix'
+2025-09-18 00:46:01,824 - __main__ - ERROR - Unexpected error: UploadConfig.__init__() got an unexpected keyword argument 'upload_prefix'
+2025-09-18 00:48:32,709 - __main__ - ERROR - Unexpected error: UploadConfig.__init__() got an unexpected keyword argument 'upload_prefix'
+2025-09-18 00:49:11,282 - __main__ - ERROR - Unexpected error: UploadConfig.__init__() got an unexpected keyword argument 'upload_prefix'
+2025-09-18 00:51:58,940 - __main__ - ERROR - Unexpected error: UploadConfig.__init__() got an unexpected keyword argument 'upload_prefix'
+2025-09-18 00:53:39,000 - __main__ - ERROR - Failed to setup AWS session: Got unexpected keyword argument 'use_ssl'
+2025-09-18 00:53:39,000 - __main__ - ERROR - Unexpected error: Got unexpected keyword argument 'use_ssl'
+2025-09-18 00:54:54,227 - botocore.credentials - INFO - Found credentials in shared credentials file: ~/.aws/credentials
+2025-09-18 00:54:54,522 - __main__ - INFO - AWS session established for region: us-east-1
+2025-09-18 00:55:11,887 - __main__ - INFO - AWS permissions validated successfully
+2025-09-18 00:55:11,888 - __main__ - INFO - File validation passed: temp/upload_f.txt
+2025-09-18 00:55:11,889 - __main__ - INFO - Starting secure upload: temp/upload_f.txt -> s3://azubi-project-3-dev-aik77814-secure-uploads/uploads/2025/09/18/b0c57b61_upload_f.txt
+2025-09-18 00:55:12,500 - __main__ - INFO - Upload completed successfully: uploads/2025/09/18/b0c57b61_upload_f.txt (11 bytes in 0.61s)
+2025-09-18 00:57:27,034 - botocore.credentials - INFO - Found credentials in shared credentials file: ~/.aws/credentials
+2025-09-18 00:57:27,205 - __main__ - INFO - AWS session established for region: us-east-1
+2025-09-18 00:57:29,419 - __main__ - INFO - AWS permissions validated successfully
+2025-09-18 00:57:29,420 - __main__ - INFO - File validation passed: temp/upload_f.txt
+2025-09-18 00:57:29,421 - __main__ - INFO - Starting secure upload: temp/upload_f.txt -> s3://azubi-project-3-dev-aik77814-secure-uploads/uploads/2025/09/18/7a363ae6_upload_f.txt
+2025-09-18 00:57:30,034 - __main__ - INFO - Upload completed successfully: uploads/2025/09/18/7a363ae6_upload_f.txt (11 bytes in 0.61s)
+2025-09-18 01:02:27,545 - botocore.credentials - INFO - Found credentials in shared credentials file: ~/.aws/credentials
+2025-09-18 01:02:27,714 - __main__ - INFO - AWS session established for region: us-east-1
+2025-09-18 01:02:29,637 - __main__ - INFO - AWS permissions validated successfully
+2025-09-18 01:02:29,637 - __main__ - INFO - File validation passed: temp/upload_f.txt
+2025-09-18 01:02:29,638 - __main__ - INFO - Starting secure upload: temp/upload_f.txt -> s3://azubi-project-3-dev-aik77814-secure-uploads/uploads/2025/09/18/f124c20f_upload_f.txt
+2025-09-18 01:02:30,175 - __main__ - INFO - Upload completed successfully: uploads/2025/09/18/f124c20f_upload_f.txt (11 bytes in 0.54s)
+2025-09-18 01:07:19,278 - scripts.secure_upload - INFO - AWS session established for region: us-east-1
+2025-09-18 01:07:19,279 - scripts.secure_upload - INFO - AWS permissions validated successfully
+2025-09-18 01:07:19,281 - scripts.secure_upload - INFO - AWS session established for region: us-east-1
+2025-09-18 01:07:19,282 - scripts.secure_upload - INFO - AWS permissions validated successfully
+2025-09-18 01:07:19,283 - scripts.secure_upload - INFO - File validation passed: /tmp/tmppv812ixh.txt
+2025-09-18 01:07:19,284 - scripts.secure_upload - INFO - AWS session established for region: us-east-1
+2025-09-18 01:07:19,285 - scripts.secure_upload - INFO - AWS permissions validated successfully
+2025-09-18 01:07:19,286 - scripts.secure_upload - INFO - AWS session established for region: us-east-1
+2025-09-18 01:07:19,287 - scripts.secure_upload - INFO - AWS permissions validated successfully
+2025-09-18 01:07:19,288 - scripts.secure_upload - INFO - AWS session established for region: us-east-1
+2025-09-18 01:07:19,289 - scripts.secure_upload - INFO - AWS permissions validated successfully
+2025-09-18 01:08:07,055 - scripts.secure_upload - INFO - AWS session established for region: us-east-1
+2025-09-18 01:08:07,905 - scripts.secure_upload - INFO - AWS permissions validated successfully
+2025-09-18 01:08:07,906 - scripts.secure_upload - INFO - AWS session established for region: us-east-1
+2025-09-18 01:08:07,907 - scripts.secure_upload - INFO - AWS permissions validated successfully
+2025-09-18 01:08:07,988 - scripts.secure_upload - INFO - AWS session established for region: us-east-1
+2025-09-18 01:08:07,990 - scripts.secure_upload - INFO - AWS permissions validated successfully
+2025-09-18 01:08:07,993 - monitoring.s3_monitor - INFO - Monitoring configuration loaded
+2025-09-18 01:08:07,995 - monitoring.s3_monitor - INFO - Monitoring configuration loaded
+2025-09-18 01:08:07,996 - monitoring.s3_monitor - INFO - Monitoring configuration loaded
+2025-09-18 01:08:07,997 - monitoring.s3_monitor - WARNING - Incomplete log line: incomplete log line...
+2025-09-18 01:08:07,998 - monitoring.s3_monitor - INFO - Monitoring configuration loaded
+2025-09-18 01:08:07,998 - monitoring.s3_monitor - WARNING - Incomplete log line: bucket-owner bucket [06/Feb/2023:00:00:00 +0000] 192.168.1.1 user-id 3E57427F3EXAMPLE REST.GET.OBJEC...
+2025-09-18 01:08:07,999 - monitoring.s3_monitor - INFO - Monitoring configuration loaded
+2025-09-18 01:08:08,008 - scripts.secure_upload - INFO - AWS session established for region: us-east-1
+2025-09-18 01:08:08,010 - scripts.secure_upload - INFO - AWS permissions validated successfully
+20

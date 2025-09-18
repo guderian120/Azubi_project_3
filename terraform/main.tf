@@ -148,13 +148,16 @@ resource "aws_s3_bucket_logging" "secure_uploads" {
   target_prefix = "access-logs/"
 }
 
-# S3 Bucket lifecycle configuration
+# S3 Bucket lifecycle configuration - FIXED
 resource "aws_s3_bucket_lifecycle_configuration" "secure_uploads" {
   bucket = aws_s3_bucket.secure_uploads.id
 
   rule {
     id     = "multipart_cleanup"
     status = "Enabled"
+
+    # Add required filter block
+    filter {}
 
     abort_incomplete_multipart_upload {
       days_after_initiation = 1
@@ -164,6 +167,9 @@ resource "aws_s3_bucket_lifecycle_configuration" "secure_uploads" {
   rule {
     id     = "transition_to_ia"
     status = "Enabled"
+
+    # Add required filter block
+    filter {}
 
     transition {
       days          = 30
@@ -185,11 +191,49 @@ resource "aws_s3_bucket_lifecycle_configuration" "secure_uploads" {
     id     = "delete_old_versions"
     status = "Enabled"
 
+    # Add required filter block
+    filter {}
+
     noncurrent_version_expiration {
       noncurrent_days = 90
     }
   }
 }
+
+# Alternative: Single rule combining all lifecycle policies (more efficient)
+# resource "aws_s3_bucket_lifecycle_configuration" "secure_uploads" {
+#   bucket = aws_s3_bucket.secure_uploads.id
+# 
+#   rule {
+#     id     = "comprehensive_lifecycle"
+#     status = "Enabled"
+# 
+#     filter {}
+# 
+#     abort_incomplete_multipart_upload {
+#       days_after_initiation = 1
+#     }
+# 
+#     transition {
+#       days          = 30
+#       storage_class = "STANDARD_IA"
+#     }
+# 
+#     transition {
+#       days          = 90
+#       storage_class = "GLACIER"
+#     }
+# 
+#     transition {
+#       days          = 365
+#       storage_class = "DEEP_ARCHIVE"
+#     }
+# 
+#     noncurrent_version_expiration {
+#       noncurrent_days = 90
+#     }
+#   }
+# }
 
 # S3 Bucket policy
 resource "aws_s3_bucket_policy" "secure_uploads" {

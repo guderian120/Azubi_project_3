@@ -13,7 +13,7 @@ Features:
 - Backup and restore operations
 - Compliance reporting
 
-Author: DevOps Team
+Author: ANDY AMPONSAH
 Version: 1.0.0
 """
 

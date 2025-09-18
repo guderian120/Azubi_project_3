@@ -1,7 +1,7 @@
 {
-  "bucket_name": "${S3_BUCKET_NAME}",
-  "kms_key_id": "${KMS_KEY_ID}",
-  "region": "${AWS_REGION}",
+  "bucket_name": "azubi-project-3-dev-aik77814-secure-uploads",
+  "kms_key_id": "58221d5e-11c5-40c9-afae-dbfd5dcdf4e1",
+  "region": "us-east-1",
   "multipart_threshold": 104857600,
   "multipart_chunksize": 8388608,
   "max_file_size": 5368709120,
@@ -26,8 +26,5 @@
     ".yaml",
     ".log",
     ".bak"
-  ],
-  "upload_prefix": "uploads",
-  "environment": "dev",
-  "project": "secure-upload-system"
+  ]
 }

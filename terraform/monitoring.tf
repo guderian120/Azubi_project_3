@@ -7,6 +7,23 @@ resource "aws_s3_bucket" "cloudtrail_logs" {
   }
 }
 
+resource "aws_s3_bucket_versioning" "cloudtrail_logs" {
+  bucket = aws_s3_bucket.cloudtrail_logs.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "cloudtrail_logs" {
+  bucket = aws_s3_bucket.cloudtrail_logs.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
+
 resource "aws_s3_bucket_public_access_block" "cloudtrail_logs" {
   bucket = aws_s3_bucket.cloudtrail_logs.id
 
@@ -55,36 +72,92 @@ resource "aws_s3_bucket_policy" "cloudtrail_logs" {
   })
 }
 
+# CloudWatch Log Group for CloudTrail
+resource "aws_cloudwatch_log_group" "cloudtrail" {
+  name              = "/aws/cloudtrail/${local.common_name}"
+  retention_in_days = var.log_retention_days
+
+  tags = {
+    Name = "${local.common_name}-cloudtrail-logs"
+  }
+}
+
+# IAM role for CloudTrail to write to CloudWatch Logs
+resource "aws_iam_role" "cloudtrail_cloudwatch_role" {
+  name = "${local.common_name}-cloudtrail-cloudwatch-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "cloudtrail.amazonaws.com"
+        }
+      }
+    ]
+  })
+
+  tags = {
+    Name = "${local.common_name}-cloudtrail-cloudwatch-role"
+  }
+}
+
+resource "aws_iam_role_policy" "cloudtrail_logs_policy" {
+  name = "${local.common_name}-cloudtrail-logs-policy"
+  role = aws_iam_role.cloudtrail_cloudwatch_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+          "logs:DescribeLogGroups",
+          "logs:DescribeLogStreams"
+        ]
+        Resource = "${aws_cloudwatch_log_group.cloudtrail.arn}:*"
+      }
+    ]
+  })
+}
+
 # CloudTrail
 resource "aws_cloudtrail" "main" {
   name           = "${local.common_name}-cloudtrail"
   s3_bucket_name = aws_s3_bucket.cloudtrail_logs.bucket
   s3_key_prefix  = "cloudtrail-logs"
 
+  # Enable CloudWatch Logs integration
+  cloud_watch_logs_group_arn = "${aws_cloudwatch_log_group.cloudtrail.arn}:*"
+  cloud_watch_logs_role_arn  = aws_iam_role.cloudtrail_cloudwatch_role.arn
+
   include_global_service_events = true
   is_multi_region_trail         = true
   enable_logging                = true
 
   event_selector {
-    read_write_type                 = "All"
-    include_management_events       = true
+  read_write_type                 = "All"
+  include_management_events       = true
 
-    data_resource {
-      type   = "AWS::S3::Object"
-      values = ["${aws_s3_bucket.secure_uploads.arn}/*"]
-    }
-
-    data_resource {
-      type   = "AWS::S3::Bucket"
-      values = [aws_s3_bucket.secure_uploads.arn]
-    }
+  data_resource {
+    type   = "AWS::S3::Object"
+    values = ["${aws_s3_bucket.secure_uploads.arn}/*"]
   }
+}
 
   tags = {
     Name = "${local.common_name}-cloudtrail"
   }
 
-  depends_on = [aws_s3_bucket_policy.cloudtrail_logs]
+  depends_on = [
+    aws_s3_bucket_policy.cloudtrail_logs,
+    aws_iam_role_policy.cloudtrail_logs_policy
+  ]
 }
 
 # SNS Topic for security alerts
@@ -125,18 +198,75 @@ resource "aws_cloudwatch_log_group" "app_logs" {
   }
 }
 
+# Fixed CloudWatch Log Metric Filters
+resource "aws_cloudwatch_log_metric_filter" "unauthorized_api_calls" {
+  name           = "${local.common_name}-unauthorized-api-calls-filter"
+  log_group_name = aws_cloudwatch_log_group.cloudtrail.name
+  
+  # Fixed pattern - proper CloudTrail JSON format without duplicate fields
+  pattern = "{ ($.errorCode = \"*UnauthorizedOperation\") || ($.errorCode = \"AccessDenied*\") }"
+
+  metric_transformation {
+    name      = "UnauthorizedAPICalls"
+    namespace = "CISBenchmark"
+    value     = "1"
+  }
+}
+
+resource "aws_cloudwatch_log_metric_filter" "s3_bucket_policy_changes" {
+  name           = "${local.common_name}-s3-policy-changes-filter"
+  log_group_name = aws_cloudwatch_log_group.cloudtrail.name
+  
+  # Fixed pattern - removed duplicate fields and proper JSON format
+  pattern = "{ ($.eventSource = s3.amazonaws.com) && (($.eventName = PutBucketPolicy) || ($.eventName = DeleteBucketPolicy) || ($.eventName = PutBucketAcl) || ($.eventName = PutObjectAcl) || ($.eventName = PutBucketCors) || ($.eventName = DeleteBucketCors) || ($.eventName = PutBucketLifecycle) || ($.eventName = DeleteBucketLifecycle)) }"
+
+  metric_transformation {
+    name      = "S3BucketPolicyChanges"
+    namespace = "CISBenchmark"
+    value     = "1"
+  }
+}
+
+# Additional useful metric filters
+resource "aws_cloudwatch_log_metric_filter" "root_access_key_usage" {
+  name           = "${local.common_name}-root-access-key-usage"
+  log_group_name = aws_cloudwatch_log_group.cloudtrail.name
+  
+  pattern = "{ $.userIdentity.type = \"Root\" && $.userIdentity.invokedBy NOT EXISTS && $.eventType != \"AwsServiceEvent\" }"
+
+  metric_transformation {
+    name      = "RootAccessKeyUsage"
+    namespace = "CISBenchmark"
+    value     = "1"
+  }
+}
+
+resource "aws_cloudwatch_log_metric_filter" "console_signin_failures" {
+  name           = "${local.common_name}-console-signin-failures"
+  log_group_name = aws_cloudwatch_log_group.cloudtrail.name
+  
+  pattern = "{ ($.eventName = ConsoleLogin) && ($.responseElements.ConsoleLogin = \"Failure\") }"
+
+  metric_transformation {
+    name      = "ConsoleSigninFailures"
+    namespace = "CISBenchmark"
+    value     = "1"
+  }
+}
+
 # CloudWatch Alarms for security monitoring
 resource "aws_cloudwatch_metric_alarm" "unauthorized_api_calls" {
   alarm_name          = "${local.common_name}-unauthorized-api-calls"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "2"
   metric_name         = "UnauthorizedAPICalls"
-  namespace           = "CloudTrail"
+  namespace           = "CISBenchmark"
   period              = "300"
   statistic           = "Sum"
-  threshold           = "5"
+  threshold           = "0"
   alarm_description   = "This metric monitors unauthorized API calls"
   alarm_actions       = [aws_sns_topic.security_alerts.arn]
+  treat_missing_data  = "notBreaching"
 
   tags = {
     Name = "${local.common_name}-unauthorized-api-calls"
@@ -148,70 +278,60 @@ resource "aws_cloudwatch_metric_alarm" "s3_bucket_policy_changes" {
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "1"
   metric_name         = "S3BucketPolicyChanges"
-  namespace           = "CloudTrail"
+  namespace           = "CISBenchmark"
   period              = "300"
   statistic           = "Sum"
   threshold           = "0"
   alarm_description   = "This metric monitors S3 bucket policy changes"
   alarm_actions       = [aws_sns_topic.security_alerts.arn]
+  treat_missing_data  = "notBreaching"
 
   tags = {
     Name = "${local.common_name}-s3-bucket-policy-changes"
   }
 }
 
-# CloudWatch Log Metric Filters
-resource "aws_cloudwatch_log_metric_filter" "unauthorized_api_calls" {
-  name           = "${local.common_name}-unauthorized-api-calls-filter"
-  log_group_name = aws_cloudwatch_log_group.app_logs.name
-  pattern        = "[version, account, time, region, source, account, time, region, source, \"ERROR\", request_id=\"*\", errorCode=\"*UnauthorizedOperation*\" || errorCode=\"*AccessDenied*\"]"
+resource "aws_cloudwatch_metric_alarm" "root_access_key_usage" {
+  alarm_name          = "${local.common_name}-root-access-key-usage"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "RootAccessKeyUsage"
+  namespace           = "CISBenchmark"
+  period              = "300"
+  statistic           = "Sum"
+  threshold           = "0"
+  alarm_description   = "This metric monitors root access key usage"
+  alarm_actions       = [aws_sns_topic.security_alerts.arn]
+  treat_missing_data  = "notBreaching"
 
-  metric_transformation {
-    name      = "UnauthorizedAPICalls"
-    namespace = "CloudTrail"
-    value     = "1"
-  }
-}
-
-resource "aws_cloudwatch_log_metric_filter" "s3_bucket_policy_changes" {
-  name           = "${local.common_name}-s3-policy-changes-filter"
-  log_group_name = aws_cloudwatch_log_group.app_logs.name
-  pattern        = "[version, account, time, region, source, account, time, region, source, eventName=\"PutBucketPolicy\" || eventName=\"DeleteBucketPolicy\" || eventName=\"PutBucketAcl\" || eventName=\"PutObjectAcl\"]"
-
-  metric_transformation {
-    name      = "S3BucketPolicyChanges"
-    namespace = "CloudTrail"
-    value     = "1"
+  tags = {
+    Name = "${local.common_name}-root-access-key-usage"
   }
 }
 
 # AWS Config for compliance monitoring
-resource "aws_config_configuration_recorder" "main" {
-  name     = "${local.common_name}-config-recorder"
-  role_arn = aws_iam_role.config_role.arn
-
-  recording_group {
-    all_supported                 = true
-    include_global_resource_types = true
-  }
-
-  depends_on = [aws_config_delivery_channel.main]
-}
-
-resource "aws_config_delivery_channel" "main" {
-  name           = "${local.common_name}-config-delivery-channel"
-  s3_bucket_name = aws_s3_bucket.config_bucket.bucket
-
-  snapshot_delivery_properties {
-    delivery_frequency = "TwentyFour_Hours"
-  }
-}
-
 resource "aws_s3_bucket" "config_bucket" {
   bucket = "${local.common_name}-config-bucket"
 
   tags = {
     Name = "${local.common_name}-config-bucket"
+  }
+}
+
+resource "aws_s3_bucket_versioning" "config_bucket" {
+  bucket = aws_s3_bucket.config_bucket.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "config_bucket" {
+  bucket = aws_s3_bucket.config_bucket.id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
   }
 }
 
@@ -222,6 +342,59 @@ resource "aws_s3_bucket_public_access_block" "config_bucket" {
   block_public_policy     = true
   ignore_public_acls      = true
   restrict_public_buckets = true
+}
+
+resource "aws_s3_bucket_policy" "config_bucket" {
+  bucket = aws_s3_bucket.config_bucket.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "AWSConfigBucketPermissionsCheck"
+        Effect = "Allow"
+        Principal = {
+          Service = "config.amazonaws.com"
+        }
+        Action   = "s3:GetBucketAcl"
+        Resource = aws_s3_bucket.config_bucket.arn
+        Condition = {
+          StringEquals = {
+            "AWS:SourceAccount" = data.aws_caller_identity.current.account_id
+          }
+        }
+      },
+      {
+        Sid    = "AWSConfigBucketExistenceCheck"
+        Effect = "Allow"
+        Principal = {
+          Service = "config.amazonaws.com"
+        }
+        Action   = "s3:ListBucket"
+        Resource = aws_s3_bucket.config_bucket.arn
+        Condition = {
+          StringEquals = {
+            "AWS:SourceAccount" = data.aws_caller_identity.current.account_id
+          }
+        }
+      },
+      {
+        Sid    = "AWSConfigBucketDelivery"
+        Effect = "Allow"
+        Principal = {
+          Service = "config.amazonaws.com"
+        }
+        Action   = "s3:PutObject"
+        Resource = "${aws_s3_bucket.config_bucket.arn}/*"
+        Condition = {
+          StringEquals = {
+            "s3:x-amz-acl" = "bucket-owner-full-control"
+            "AWS:SourceAccount" = data.aws_caller_identity.current.account_id
+          }
+        }
+      }
+    ]
+  })
 }
 
 # IAM Role for AWS Config
@@ -246,9 +419,10 @@ resource "aws_iam_role" "config_role" {
   }
 }
 
+# Fixed IAM policy attachment - correct ARN
 resource "aws_iam_role_policy_attachment" "config_role_policy" {
   role       = aws_iam_role.config_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/ConfigRole"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWS_ConfigRole"
 }
 
 resource "aws_iam_role_policy" "config_s3_policy" {
@@ -274,9 +448,41 @@ resource "aws_iam_role_policy" "config_s3_policy" {
           "s3:GetObject"
         ]
         Resource = "${aws_s3_bucket.config_bucket.arn}/*"
+        Condition = {
+          StringEquals = {
+            "s3:x-amz-acl" = "bucket-owner-full-control"
+          }
+        }
       }
     ]
   })
+}
+
+resource "aws_config_delivery_channel" "main" {
+  name           = "${local.common_name}-config-delivery-channel"
+  s3_bucket_name = aws_s3_bucket.config_bucket.bucket
+
+  snapshot_delivery_properties {
+    delivery_frequency = "TwentyFour_Hours"
+  }
+
+  depends_on = [
+    aws_s3_bucket_policy.config_bucket,
+    aws_config_configuration_recorder.main 
+  ]
+}
+
+resource "aws_config_configuration_recorder" "main" {
+  name     = "${local.common_name}-config-recorder"
+  role_arn = aws_iam_role.config_role.arn
+
+  recording_group {
+    all_supported = true
+    include_global_resource_types = true
+    
+    
+  }
+
 }
 
 # Config Rules for compliance

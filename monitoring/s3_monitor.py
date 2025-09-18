@@ -15,7 +15,7 @@ Features:
 - Automated threat response
 - Compliance reporting
 
-Author: DevOps Team
+Author: Andy Amponsah
 Version: 1.0.0
 """
 
@@ -591,7 +591,7 @@ class S3SecurityMonitor:
         alerts = []
         
         # This is a simplified implementation
-        # In production, you would integrate with IP geolocation services
+        # In production, this would integrate with IP geolocation services
         
         # Check for private/local IP addresses accessing from unexpected locations
         for entry in entries:
@@ -756,7 +756,7 @@ class S3SecurityMonitor:
         
         return report
     
-    def run_continuous_monitoring(self, check_interval_minutes: int = 5, sns_topic_arn: Optional[str] = None):
+    def run_continuous_monitoring(self, check_interval_minutes: int = 1, sns_topic_arn: Optional[str] = None):
         """Run continuous monitoring of S3 access logs.
         
         Args:
@@ -808,7 +808,7 @@ class S3SecurityMonitor:
 @click.option('--start-date', '-s', help='Start date for analysis (YYYY-MM-DD)')
 @click.option('--end-date', '-e', help='End date for analysis (YYYY-MM-DD)')
 @click.option('--continuous', '-c', is_flag=True, help='Run continuous monitoring')
-@click.option('--interval', '-i', default=5, help='Monitoring interval in minutes')
+@click.option('--interval', '-i', default=1, help='Monitoring interval in minutes')
 @click.option('--sns-topic', help='SNS topic ARN for alerts')
 @click.option('--output-format', '-f', default='table', type=click.Choice(['table', 'json', 'csv']), help='Output format')
 @click.option('--output-file', '-o', help='Output file path')

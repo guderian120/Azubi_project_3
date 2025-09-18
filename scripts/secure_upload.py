@@ -15,7 +15,7 @@ Features:
 - Progress tracking and resume capability
 - Automatic cleanup of failed uploads
 
-Author: DevOps Team
+Author: ANDY AMPONSAH
 Version: 1.0.0
 """
 
@@ -97,7 +97,6 @@ class SecureUploadManager:
             boto_config = Config(
                 region_name=self.config.region,
                 retries={'max_attempts': self.config.retry_attempts, 'mode': 'adaptive'},
-                use_ssl=True,
                 signature_version='s3v4'
             )
             
