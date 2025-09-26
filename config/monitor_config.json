@@ -1,0 +1,60 @@
+{
+  "whitelist_ips": [
+    "127.0.0.1",
+    "::1",
+    "10.0.0.0/8",
+    "192.168.0.0/16"
+  ],
+  "known_user_agents": [
+    "aws-cli/",
+    "Boto3/",
+    "boto3",
+    "aws-sdk-",
+    "Mozilla/5.0",
+    "Chrome/",
+    "Firefox/",
+    "Safari/"
+  ],
+  "alert_thresholds": {
+    "failed_requests_per_minute": 10,
+    "requests_per_ip_per_minute": 100,
+    "unusual_user_agents": 5,
+    "geographic_anomaly_threshold": 0.1,
+    "scanning_threshold": 50,
+    "individual_ip_failure_threshold": 5
+  },
+  "sensitive_operations": [
+    "REST.DELETE.OBJECT",
+    "REST.PUT.BUCKET",
+    "REST.DELETE.BUCKET",
+    "REST.PUT.BUCKETPOLICY",
+    "REST.PUT.BUCKETACL",
+    "REST.PUT.OBJECTACL",
+    "REST.PUT.BUCKET.VERSIONING",
+    "REST.PUT.BUCKET.ENCRYPTION"
+  ],
+  "notification_settings": {
+    "email_on_high_severity": true,
+    "email_on_medium_severity": false,
+    "sms_on_critical": true,
+    "webhook_url": "",
+    "slack_webhook": ""
+  },
+  "monitoring_intervals": {
+    "continuous_check_minutes": 5,
+    "report_generation_hours": 24,
+    "cleanup_retention_days": 90
+  },
+  "geographic_settings": {
+    "enable_geo_analysis": true,
+    "suspicious_countries": ["CN", "RU", "KP", "IR"],
+    "allowed_countries": ["US", "CA", "GB", "DE", "FR"],
+    "geo_database_path": "/opt/GeoLite2-City.mmdb"
+  },
+  "ml_settings": {
+    "enable_anomaly_detection": true,
+    "baseline_period_days": 30,
+    "anomaly_threshold": 2.5,
+    "model_update_frequency_hours": 24
+  }
+}

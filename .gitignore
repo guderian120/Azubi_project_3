@@ -7,7 +7,7 @@ __pycache__/
 venv/*
 venv
 .env/*
-config/*
+config/upload_config.json
 logs/*
 reports/*
 *.log
@@ -16,3 +16,5 @@ temp/*
 *.tfstate.*backup
 crash.log       
 upload_config.json
+p3/*
+p3
