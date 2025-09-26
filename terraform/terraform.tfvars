@@ -1,6 +1,5 @@
 environment = "dev"
 aws_region = "us-east-1"
 project_name = "azubi-project-3"
-owner = "root"
+owner = "guderian"
 cost_center = "engineering"
-sns_email_endpoint = "realamponsah10@yahoo.com"

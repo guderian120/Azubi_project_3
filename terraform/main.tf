@@ -199,7 +199,77 @@ resource "aws_s3_bucket_lifecycle_configuration" "secure_uploads" {
     }
   }
 }
+# Add this to your s3.tf file after the access_logs bucket configuration
 
+# Bucket policy for access logs bucket - THIS WAS MISSING!
+resource "aws_s3_bucket_policy" "access_logs" {
+  bucket = aws_s3_bucket.access_logs.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "S3ServerAccessLogsPolicy"
+        Effect = "Allow"
+        Principal = {
+          Service = "logging.s3.amazonaws.com"
+        }
+        Action = "s3:PutObject"
+        Resource = "${aws_s3_bucket.access_logs.arn}/access-logs/*"
+        Condition = {
+          ArnEquals = {
+            "aws:SourceArn" = aws_s3_bucket.secure_uploads.arn
+          }
+          StringEquals = {
+            "aws:SourceAccount" = data.aws_caller_identity.current.account_id
+          }
+        }
+      },
+      {
+        Sid    = "S3ServerAccessLogsDeliveryRootAccess"
+        Effect = "Allow"
+        Principal = {
+          Service = "logging.s3.amazonaws.com"
+        }
+        Action = "s3:GetBucketAcl"
+        Resource = aws_s3_bucket.access_logs.arn
+        Condition = {
+          StringEquals = {
+            "aws:SourceAccount" = data.aws_caller_identity.current.account_id
+          }
+        }
+      }
+    ]
+  })
+}
+
+# Optional: Add lifecycle policy for access logs to manage storage costs
+resource "aws_s3_bucket_lifecycle_configuration" "access_logs" {
+  bucket = aws_s3_bucket.access_logs.id
+
+  rule {
+    id     = "access_logs_lifecycle"
+    status = "Enabled"
+
+    filter {
+      prefix = "access-logs/"
+    }
+
+    transition {
+      days          = 30
+      storage_class = "STANDARD_IA"
+    }
+
+    transition {
+      days          = 90
+      storage_class = "GLACIER"
+    }
+
+    expiration {
+      days = 2555  # 7 years retention for compliance
+    }
+  }
+}
 # Alternative: Single rule combining all lifecycle policies (more efficient)
 # resource "aws_s3_bucket_lifecycle_configuration" "secure_uploads" {
 #   bucket = aws_s3_bucket.secure_uploads.id

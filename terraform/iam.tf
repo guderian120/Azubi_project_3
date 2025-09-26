@@ -11,11 +11,11 @@ resource "aws_iam_role" "upload_role" {
         Principal = {
           AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
         }
-        Condition = {
-          Bool = {
-            "aws:MultiFactorAuthPresent" = "true"
-          }
-        }
+        # Condition = {
+        #   Bool = {
+        #     "aws:MultiFactorAuthPresent" = "true"
+        #   }
+        # }
       }
     ]
   })

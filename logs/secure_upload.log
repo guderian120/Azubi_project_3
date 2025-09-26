@@ -70,4 +70,37 @@
 2025-09-18 01:08:07,999 - monitoring.s3_monitor - INFO - Monitoring configuration loaded
 2025-09-18 01:08:08,008 - scripts.secure_upload - INFO - AWS session established for region: us-east-1
 2025-09-18 01:08:08,010 - scripts.secure_upload - INFO - AWS permissions validated successfully
-20
+202025-09-26 18:06:11,003 - botocore.credentials - INFO - Found credentials in shared credentials file: ~/.aws/credentials
+2025-09-26 18:06:12,630 - __main__ - ERROR - Failed to setup AWS session: An error occurred (AccessDenied) when calling the AssumeRole operation: User: arn:aws:iam::084375583047:user/Andy is not authorized to perform: sts:AssumeRole on resource: arn:aws:iam::084375583047:role/azubi-project-3-dev-ezg0a2qw-upload-role
+2025-09-26 18:06:12,630 - __main__ - ERROR - Unexpected error: An error occurred (AccessDenied) when calling the AssumeRole operation: User: arn:aws:iam::084375583047:user/Andy is not authorized to perform: sts:AssumeRole on resource: arn:aws:iam::084375583047:role/azubi-project-3-dev-ezg0a2qw-upload-role
+2025-09-26 18:07:55,489 - botocore.credentials - INFO - Found credentials in shared credentials file: ~/.aws/credentials
+2025-09-26 18:07:57,391 - __main__ - INFO - AWS session established for region: us-east-1
+2025-09-26 18:07:58,624 - __main__ - ERROR - AWS permission validation failed: An error occurred (404) when calling the HeadBucket operation: Not Found
+2025-09-26 18:07:58,624 - __main__ - ERROR - Unexpected error: An error occurred (404) when calling the HeadBucket operation: Not Found
+2025-09-26 18:09:11,867 - botocore.credentials - INFO - Found credentials in shared credentials file: ~/.aws/credentials
+2025-09-26 18:09:53,895 - __main__ - INFO - AWS session established for region: us-east-1
+2025-09-26 18:09:54,828 - __main__ - ERROR - AWS permission validation failed: An error occurred (403) when calling the HeadBucket operation: Forbidden
+2025-09-26 18:09:54,828 - __main__ - ERROR - Unexpected error: An error occurred (403) when calling the HeadBucket operation: Forbidden
+2025-09-26 18:10:48,378 - botocore.credentials - INFO - Found credentials in shared credentials file: ~/.aws/credentials
+2025-09-26 18:10:48,545 - __main__ - INFO - AWS session established for region: us-east-1
+2025-09-26 18:10:50,417 - __main__ - INFO - AWS permissions validated successfully
+2025-09-26 18:10:50,418 - __main__ - ERROR - Upload failed: File does not exist: ../temp/upload_f.txt
+2025-09-26 18:11:09,129 - botocore.credentials - INFO - Found credentials in shared credentials file: ~/.aws/credentials
+2025-09-26 18:11:09,304 - __main__ - INFO - AWS session established for region: us-east-1
+2025-09-26 18:11:11,594 - __main__ - INFO - AWS permissions validated successfully
+2025-09-26 18:11:11,595 - __main__ - INFO - File validation passed: temp/upload_f.txt
+2025-09-26 18:11:11,595 - __main__ - INFO - Starting secure upload: temp/upload_f.txt -> s3://azubi-project-3-dev-ezg0a2qw-secure-uploads/uploads/2025/09/26/2c939cea_upload_f.txt
+2025-09-26 18:11:12,169 - __main__ - INFO - Upload completed successfully: uploads/2025/09/26/2c939cea_upload_f.txt (11 bytes in 0.57s)
+2025-09-26 18:22:54,890 - botocore.credentials - INFO - Found credentials in shared credentials file: ~/.aws/credentials
+2025-09-26 18:22:55,047 - __main__ - INFO - AWS session established for region: us-east-1
+2025-09-26 18:23:01,757 - __main__ - INFO - AWS permissions validated successfully
+2025-09-26 18:23:01,757 - __main__ - ERROR - Upload failed: File does not exist: ../temp/upload_f.txt
+2025-09-26 18:23:09,880 - botocore.credentials - INFO - Found credentials in shared credentials file: ~/.aws/credentials
+2025-09-26 18:23:10,035 - __main__ - INFO - AWS session established for region: us-east-1
+2025-09-26 18:23:11,844 - __main__ - INFO - AWS permissions validated successfully
+2025-09-26 18:23:11,844 - __main__ - INFO - File validation passed: temp/upload_f.txt
+2025-09-26 18:23:11,845 - __main__ - INFO - Starting secure upload: temp/upload_f.txt -> s3://azubi-project-3-dev-ezg0a2qw-secure-uploads/uploads/2025/09/26/26141e3e_upload_f.txt
+2025-09-26 18:23:12,239 - __main__ - INFO - Multipart upload initiated: 9x7cAtTAL3LmxvTrf6iHZropJnRJMQCzqMgIDLEYCMSKAgPas7Kx5HF_mVNHWyr_bA96ntNqL_Xt3ADSGiKwncHhj58PVsw4tXdqTG1CvkFAJPvRH5WZ2_axcRoDQpeA
+2025-09-26 18:23:14,660 - __main__ - INFO - Aborted multipart upload: 9x7cAtTAL3LmxvTrf6iHZropJnRJMQCzqMgIDLEYCMSKAgPas7Kx5HF_mVNHWyr_bA96ntNqL_Xt3ADSGiKwncHhj58PVsw4tXdqTG1CvkFAJPvRH5WZ2_axcRoDQpeA
+2025-09-26 18:23:14,660 - __main__ - ERROR - Multipart upload failed: An error occurred (EntityTooSmall) when calling the CompleteMultipartUpload operation: Your proposed upload is smaller than the minimum allowed size
+2025-09-26 18:23:14,661 - __main__ - ERROR - Upload failed: An error occurred (EntityTooSmall) when calling the CompleteMultipartUpload operation: Your proposed upload is smaller than the minimum allowed size

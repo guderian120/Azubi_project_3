@@ -6,3 +6,13 @@ __pycache__/
 .terraform/*
 venv/*
 venv
+.env/*
+config/*
+logs/*
+reports/*
+*.log
+temp/*
+*.tfstate
+*.tfstate.*backup
+crash.log       
+upload_config.json

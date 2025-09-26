@@ -468,7 +468,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Documentation**: [Wiki](wiki)
 - **Issues**: [GitHub Issues](issues)
 - **Discussions**: [GitHub Discussions](discussions)
-- **Email**: support@company.com
+- **Email**: officialamponsah@gmail.com
 
 ## 📈 Roadmap
 
@@ -481,6 +481,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Built with ❤️ by the DevOps Team**
+**Built with ❤️ by Andy**
 
-*For enterprise support and custom implementations, contact our team.*
+*For enterprise support and custom implementations, contact me.*

@@ -1,6 +1,6 @@
 {
-  "bucket_name": "azubi-project-3-dev-aik77814-secure-uploads",
-  "kms_key_id": "58221d5e-11c5-40c9-afae-dbfd5dcdf4e1",
+  "bucket_name": "azubi-project-3-dev-ezg0a2qw-secure-uploads",
+  "kms_key_id": "20e2a257-439c-4764-9eea-7c6326452596",
   "region": "us-east-1",
   "multipart_threshold": 104857600,
   "multipart_chunksize": 8388608,
